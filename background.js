@@ -1,10 +1,9 @@
-chrome.webRequest.onBeforeSendHeaders.addListener(
-    function(details) {
-        var headers = details.requestHeaders
-        if (details.url === 'https://f1tv.formula1.com/api/commentary-tracks/?fields=name,uid,language_code,language_code_alt') {
-            headers = []
+browser.webRequest.onBeforeSendHeaders.addListener(
+    (details) => {
+        if (details.url.indexOf('https://f1tv.formula1.com/api/commentary-tracks') === 0) {
+            delete details.requestHeaders['Cookie'];
         }
-        return { requestHeaders: headers };
+        return details.requestHeaders;
     },
     {urls: ['https://*.formula1.com/*']},
     ['blocking', 'requestHeaders']
