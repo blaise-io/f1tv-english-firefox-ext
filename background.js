@@ -1,10 +1,11 @@
 browser.webRequest.onBeforeSendHeaders.addListener(
-    (details) => {
-        if (details.url.indexOf('https://f1tv.formula1.com/api/commentary-tracks') === 0) {
-            delete details.requestHeaders['Cookie'];
+    details => {
+        if (details.url.includes('commentary-tracks')) {
+            details.requestHeaders = details.requestHeaders.filter(rh => rh.name !== 'X-CountryCode');
+            details.requestHeaders.push({name: "X-CountryCode", value: "NL"});
         }
-        return details.requestHeaders;
+        return {requestHeaders: details.requestHeaders};
     },
     {urls: ['https://*.formula1.com/*']},
-    ['blocking', 'requestHeaders']
+    ['blocking', 'requestHeaders'],
 );
